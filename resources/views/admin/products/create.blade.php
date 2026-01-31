@@ -140,14 +140,25 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="stock" class="form-label">Stock</label>
                                 <input type="number" name="stock" class="form-control @error('stock') is-invalid @enderror" id="stock" value="{{ old('stock') }}" min="0">
                                 @error('stock')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
+                                <label for="product_type" class="form-label">Product Type</label>
+                                <select name="product_type" class="custom-select @error('product_type') is-invalid @enderror" id="product_type">
+                                    <option value="" selected>Select Product Type</option>
+                                    <option value="saree" {{ old('product_type') == 'saree' ? 'selected' : '' }}>Saree</option>
+                                    <option value="blouse" {{ old('product_type') == 'blouse' ? 'selected' : '' }}>Blouse</option>
+                                </select>
+                                @error('product_type')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 form-group">
                                 <label for="category_id" class="form-label">Category</label>
                                 <select name="category_id" class="custom-select @error('category_id') is-invalid @enderror" id="category_id">
                                     <option value="" selected>Select Category</option>
@@ -168,7 +179,7 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="season_category_id" class="form-label">Season Category</label>
                                 <select name="season_category_id" class="custom-select @error('season_category_id') is-invalid @enderror" id="season_category_id">
                                     <option value="">Select Season Category...</option>
@@ -179,6 +190,102 @@
                                     @endforeach 
                                 </select>
                                 @error('season_category_id')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <!-- Size Field - Only show for Blouse -->
+                        <div class="row" id="size-field" style="display: none;">
+                            <div class="col-md-6 form-group">
+                                <label for="size" class="form-label">Size</label>
+                                <div class="size-checkbox-group">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="XS" id="size_xs" {{ in_array('XS', old('size', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_xs">XS</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="S" id="size_s" {{ in_array('S', old('size', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_s">S</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="M" id="size_m" {{ in_array('M', old('size', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_m">M</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="L" id="size_l" {{ in_array('L', old('size', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_l">L</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="XL" id="size_xl" {{ in_array('XL', old('size', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_xl">XL</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="XXL" id="size_xxl" {{ in_array('XXL', old('size', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_xxl">XXL</label>
+                                    </div>
+                                </div>
+                                @error('size')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <!-- Matching Blouse Field - Only show for Saree -->
+                        <div class="row" id="matching-blouse-field" style="display: none;">
+                            <div class="col-md-6 form-group">
+                                <label for="matching_blouse" class="form-label">Matching Blouse</label>
+                                <select name="matching_blouse[]" class="custom-select @error('matching_blouse') is-invalid @enderror" id="matching_blouse" multiple>
+                                    @foreach($blouseProducts as $blouse)
+                                        <option value="{{ $blouse->id }}" {{ in_array($blouse->id, old('matching_blouse', [])) ? 'selected' : '' }}>
+                                            {{ $blouse->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('matching_blouse')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <!-- New Product Details Fields -->
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="craft" class="form-label">Craft</label>
+                                <input type="text" name="craft" class="form-control @error('craft') is-invalid @enderror" id="craft" value="{{ old('craft') }}">
+                                @error('craft')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="material" class="form-label">Material</label>
+                                <input type="text" name="material" class="form-control @error('material') is-invalid @enderror" id="material" value="{{ old('material') }}">
+                                @error('material')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="man_hours" class="form-label">Man Hours</label>
+                                <input type="text" name="man_hours" class="form-control @error('man_hours') is-invalid @enderror" id="man_hours" value="{{ old('man_hours') }}">
+                                @error('man_hours')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="first_order_free_gift" class="form-label">1st Order Free Gift</label>
+                                <input type="text" name="first_order_free_gift" class="form-control @error('first_order_free_gift') is-invalid @enderror" id="first_order_free_gift" value="{{ old('first_order_free_gift') }}">
+                                @error('first_order_free_gift')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="third_order_free_gift" class="form-label">3rd Order Free Gift</label>
+                                <input type="text" name="third_order_free_gift" class="form-control @error('third_order_free_gift') is-invalid @enderror" id="third_order_free_gift" value="{{ old('third_order_free_gift') }}">
+                                @error('third_order_free_gift')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -339,5 +446,40 @@
             $('#preview').hide();
         }
     });   
+</script>
+<script>
+    // Show/hide size field based on product type selection
+    $('#product_type').on('change', function() {
+        console.log('Product type changed to:', $(this).val());
+        if ($(this).val() === 'blouse') {
+            $('#size-field').show();
+            $('#matching-blouse-field').hide();
+            $('#matching_blouse').val([]);
+            console.log('Size field shown, matching blouse hidden');
+        } else if ($(this).val() === 'saree') {
+            $('#size-field').hide();
+            $('#matching-blouse-field').show();
+            $('input[name="size[]"]').prop('checked', false);
+            console.log('Matching blouse field shown, size hidden');
+        } else {
+            $('#size-field').hide();
+            $('#matching-blouse-field').hide();
+            $('input[name="size[]"]').prop('checked', false);
+            $('#matching_blouse').val([]);
+            console.log('Both fields hidden');
+        }
+    });
+    
+    // Show appropriate field on page load
+    $(document).ready(function() {
+        console.log('Document ready, product type value:', $('#product_type').val());
+        if ($('#product_type').val() === 'blouse') {
+            $('#size-field').show();
+            console.log('Size field shown on page load');
+        } else if ($('#product_type').val() === 'saree') {
+            $('#matching-blouse-field').show();
+            console.log('Matching blouse field shown on page load');
+        }
+    });
 </script>    
 @endsection

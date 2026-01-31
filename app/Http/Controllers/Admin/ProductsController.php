@@ -31,7 +31,8 @@ class ProductsController extends Controller
     {
         $categories = Category::all();
         $seasonCategories = SeasonCategory::all();
-        return view('admin.products.create', compact('categories', 'seasonCategories'));
+        $blouseProducts = Product::where('product_type', 'blouse')->get();
+        return view('admin.products.create', compact('categories', 'seasonCategories', 'blouseProducts'));
     }
 
     // Store a newly created product in storage.
@@ -47,6 +48,19 @@ class ProductsController extends Controller
         // Handle additional information and QA fields
         $validated['additional_information'] = $this->formatJsonField($request->additional_information);
         $validated['qa'] = $this->formatJsonField($request->qa);
+        
+        // Handle size field for blouse products and matching blouse for saree
+        $validated['product_type'] = $request->product_type;
+        if ($request->product_type === 'blouse' && $request->has('size')) {
+            $validated['size'] = $request->size;
+            $validated['matching_blouse'] = null;
+        } elseif ($request->product_type === 'saree' && $request->has('matching_blouse')) {
+            $validated['matching_blouse'] = $request->matching_blouse;
+            $validated['size'] = null;
+        } else {
+            $validated['size'] = null;
+            $validated['matching_blouse'] = null;
+        }
 
         // Process and save main product image
         if ($request->hasFile('product_image')) {
@@ -92,13 +106,13 @@ class ProductsController extends Controller
     {
         $categories = Category::all();
         $seasonCategories = SeasonCategory::all();
-        return view('admin.products.edit', compact('product', 'categories', 'seasonCategories'));
+        $blouseProducts = Product::where('product_type', 'blouse')->get();
+        return view('admin.products.edit', compact('product', 'categories', 'seasonCategories', 'blouseProducts'));
     }
 
     // Update the specified product in storage.
     public function update(Request $request, Product $product)
     {
-        //dd($request->all());
         // Validate the product data
         $validated = $this->validateData($request, $product->id);
     
@@ -108,6 +122,19 @@ class ProductsController extends Controller
         // Handle additional information and QA fields
         $validated['additional_information'] = $this->formatJsonField($request->additional_information);
         $validated['qa'] = $this->formatJsonField($request->qa);
+        
+        // Handle product type, size and matching blouse
+        $product->product_type = $request->product_type;
+        if ($request->product_type === 'blouse' && $request->has('size')) {
+            $product->size = $request->size;
+            $product->matching_blouse = null;
+        } elseif ($request->product_type === 'saree' && $request->has('matching_blouse')) {
+            $product->matching_blouse = $request->matching_blouse;
+            $product->size = null;
+        } else {
+            $product->size = null;
+            $product->matching_blouse = null;
+        }
     
         // Handle main product images
         if ($request->hasFile('product_image')) {
@@ -160,6 +187,7 @@ class ProductsController extends Controller
     
         // Update the product in the database
         $product->update($validated);
+        $product->save(); // Ensure the direct assignments are saved
     
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
@@ -201,6 +229,16 @@ class ProductsController extends Controller
         $rules = [
             'title' => 'required|string|max:255',
             'sku' => ['required', 'string', 'max:255', $uniqueSkuRule],
+            'product_type' => 'required|in:saree,blouse',
+            'size' => 'required_if:product_type,blouse|array',
+            'size.*' => 'in:XS,S,M,L,XL,XXL',
+            'matching_blouse' => 'nullable|array',
+            'matching_blouse.*' => 'exists:products,id',
+            'craft' => 'nullable|string|max:255',
+            'material' => 'nullable|string|max:255',
+            'man_hours' => 'nullable|string|max:255',
+            'first_order_free_gift' => 'nullable|string|max:255',
+            'third_order_free_gift' => 'nullable|string|max:255',
             'regular_price' => ['required', 'numeric', function ($attribute, $value, $fail) use ($request) {
                 if ($request->sale_price && $value <= $request->sale_price) {
                     $fail('The regular price must be greater than the sale price.');

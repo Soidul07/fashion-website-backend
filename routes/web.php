@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ThemeOptionController;
 use App\Http\Controllers\Admin\SeasonCategoryController;
 use App\Http\Controllers\Admin\ManageHomePageController;
 use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\Admin\OrdersController;
 
 Route::get('/', function () {
     return redirect()->route('admin.login');
@@ -69,6 +70,10 @@ Route::middleware([CheckAdmin::class])->group(function () {
     Route::put('/products/{product}', [ProductsController::class, 'update'])->name('admin.products.update');
     Route::delete('/products/{product}', [ProductsController::class, 'destroy'])->name('admin.products.destroy');
     Route::get('/products/{id}', [ProductsController::class, 'show'])->name('admin.products.show');
+
+    // Orders management routes
+    Route::get('/orders', [OrdersController::class, 'index'])->name('admin.orders.index');
+    Route::patch('/orders/{id}/status', [OrdersController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 
     // Theme Options
     Route::get('/theme-options', [ThemeOptionController::class, 'index'])->name('admin.theme-options');

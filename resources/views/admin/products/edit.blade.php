@@ -174,14 +174,25 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="stock" class="form-label">Stock</label>
                                 <input type="number" name="stock" class="form-control @error('stock') is-invalid @enderror" id="stock" value="{{ old('stock', $product->stock) }}" min="0">
                                 @error('stock')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
+                                <label for="product_type" class="form-label">Product Type</label>
+                                <select name="product_type" class="custom-select @error('product_type') is-invalid @enderror" id="product_type">
+                                    <option value="" selected>Select Product Type</option>
+                                    <option value="saree" {{ old('product_type', $product->product_type) == 'saree' ? 'selected' : '' }}>Saree</option>
+                                    <option value="blouse" {{ old('product_type', $product->product_type) == 'blouse' ? 'selected' : '' }}>Blouse</option>
+                                </select>
+                                @error('product_type')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 form-group">
                                 <label for="category_id" class="form-label">Category</label>
                                 <select name="category_id" class="custom-select @error('category_id') is-invalid @enderror" id="category_id">
                                     <option value="" selected>Select Category</option>
@@ -202,7 +213,7 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="col-md-4 form-group">
+                            <div class="col-md-3 form-group">
                                 <label for="season_category_id" class="form-label">Season Category</label>
                                 <select name="season_category_id" class="custom-select @error('season_category_id') is-invalid @enderror" id="season_category_id">
                                 <option value="">Select Season Category...</option>
@@ -213,6 +224,108 @@
                                     @endforeach 
                                 </select>
                                 @error('season_category_id')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <!-- Size Field - Only show for Blouse -->
+                        @php
+                            $selectedSizes = $product->size ?? [];
+                        @endphp
+                        <div class="row" id="size-field" style="display: {{ old('product_type', $product->product_type) == 'blouse' ? 'block' : 'none' }};">
+                            <div class="col-md-6 form-group">
+                                <label for="size" class="form-label">Size</label>
+                                <div class="size-checkbox-group">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="XS" id="size_xs" {{ in_array('XS', old('size', $selectedSizes)) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_xs">XS</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="S" id="size_s" {{ in_array('S', old('size', $selectedSizes)) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_s">S</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="M" id="size_m" {{ in_array('M', old('size', $selectedSizes)) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_m">M</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="L" id="size_l" {{ in_array('L', old('size', $selectedSizes)) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_l">L</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="XL" id="size_xl" {{ in_array('XL', old('size', $selectedSizes)) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_xl">XL</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" name="size[]" value="XXL" id="size_xxl" {{ in_array('XXL', old('size', $selectedSizes)) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="size_xxl">XXL</label>
+                                    </div>
+                                </div>
+                                @error('size')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <!-- Matching Blouse Field - Only show for Saree -->
+                        @php
+                            $selectedMatchingBlouse = $product->matching_blouse ?? [];
+                        @endphp
+                        <div class="row" id="matching-blouse-field" style="display: {{ old('product_type', $product->product_type) == 'saree' ? 'block' : 'none' }};">
+                            <div class="col-md-6 form-group">
+                                <label for="matching_blouse" class="form-label">Matching Blouse</label>
+                                <select name="matching_blouse[]" class="custom-select @error('matching_blouse') is-invalid @enderror" id="matching_blouse" multiple>
+                                    @foreach($blouseProducts as $blouse)
+                                        <option value="{{ $blouse->id }}" {{ in_array($blouse->id, old('matching_blouse', $selectedMatchingBlouse)) ? 'selected' : '' }}>
+                                            {{ $blouse->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('matching_blouse')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <!-- New Product Details Fields -->
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="craft" class="form-label">Craft</label>
+                                <input type="text" name="craft" class="form-control @error('craft') is-invalid @enderror" id="craft" value="{{ old('craft', $product->craft) }}">
+                                @error('craft')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="material" class="form-label">Material</label>
+                                <input type="text" name="material" class="form-control @error('material') is-invalid @enderror" id="material" value="{{ old('material', $product->material) }}">
+                                @error('material')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="man_hours" class="form-label">Man Hours</label>
+                                <input type="text" name="man_hours" class="form-control @error('man_hours') is-invalid @enderror" id="man_hours" value="{{ old('man_hours', $product->man_hours) }}">
+                                @error('man_hours')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="first_order_free_gift" class="form-label">1st Order Free Gift</label>
+                                <input type="text" name="first_order_free_gift" class="form-control @error('first_order_free_gift') is-invalid @enderror" id="first_order_free_gift" value="{{ old('first_order_free_gift', $product->first_order_free_gift) }}">
+                                @error('first_order_free_gift')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="third_order_free_gift" class="form-label">3rd Order Free Gift</label>
+                                <input type="text" name="third_order_free_gift" class="form-control @error('third_order_free_gift') is-invalid @enderror" id="third_order_free_gift" value="{{ old('third_order_free_gift', $product->third_order_free_gift) }}">
+                                @error('third_order_free_gift')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -436,6 +549,34 @@
                     value: image
                 }).appendTo('form');
             });
+        }
+    });
+</script>
+<script>
+    // Show/hide size field based on product type selection
+    $('#product_type').on('change', function() {
+        if ($(this).val() === 'blouse') {
+            $('#size-field').show();
+            $('#matching-blouse-field').hide();
+            $('#matching_blouse').val([]);
+        } else if ($(this).val() === 'saree') {
+            $('#size-field').hide();
+            $('#matching-blouse-field').show();
+            $('input[name="size[]"]').prop('checked', false);
+        } else {
+            $('#size-field').hide();
+            $('#matching-blouse-field').hide();
+            $('input[name="size[]"]').prop('checked', false);
+            $('#matching_blouse').val([]);
+        }
+    });
+    
+    // Show appropriate field on page load
+    $(document).ready(function() {
+        if ($('#product_type').val() === 'blouse') {
+            $('#size-field').show();
+        } else if ($('#product_type').val() === 'saree') {
+            $('#matching-blouse-field').show();
         }
     });
 </script>

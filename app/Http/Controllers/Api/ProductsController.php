@@ -183,6 +183,29 @@ class ProductsController extends Controller
             }
             $product->product_gallery_images = json_encode($gallery_images);
         }
+        
+        // Add matching blouse data if product is saree
+        if ($product->product_type === 'saree' && $product->matching_blouse) {
+            $matchingBlouseIds = $product->matching_blouse;
+            $matchingBlouses = Product::whereIn('id', $matchingBlouseIds)
+                ->select('id', 'title', 'slug', 'size', 'regular_price', 'sale_price', 'product_image', 'product_image2', 'craft', 'material', 'man_hours', 'first_order_free_gift', 'third_order_free_gift')
+                ->get()
+                ->map(function ($blouse) {
+                    if ($blouse->product_image) {
+                        $blouse->product_image = asset('admin_assets/uploads/' . $blouse->product_image);
+                    }
+                    if ($blouse->product_image2) {
+                        $blouse->product_image2 = asset('admin_assets/uploads/' . $blouse->product_image2);
+                    }
+                    $blouse->discount_percentage = $blouse->regular_price > 0 && $blouse->sale_price > 0
+                        ? round((($blouse->regular_price - $blouse->sale_price) / $blouse->regular_price) * 100)
+                        : 0;
+                    return $blouse;
+                });
+            $product->matching_blouses_data = $matchingBlouses;
+        } else {
+            $product->matching_blouses_data = [];
+        }
     
         // Fetch related category details
         $category = $product->category; // Assuming a relationship method named 'category' exists on Product model

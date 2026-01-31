@@ -22,16 +22,26 @@ class Product extends Model
         'stock',
         'sale_start',
         'sale_end',
+        'product_type',
+        'size',
+        'matching_blouse',
         'additional_information',
         'qa',
         'product_image',
         'product_image2',
-        'product_gallery_images'
+        'product_gallery_images',
+        'craft',
+        'material',
+        'man_hours',
+        'first_order_free_gift',
+        'third_order_free_gift'
     ];
 
     protected $casts = [
         'sale_start' => 'datetime',
         'sale_end' => 'datetime',
+        'size' => 'array',
+        'matching_blouse' => 'array',
     ];
 
     /**
