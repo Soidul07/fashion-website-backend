@@ -20,6 +20,8 @@ class Product extends Model
         'regular_price',
         'sale_price',
         'stock',
+        'reviews_count',
+        'reviews_average',
         'sale_start',
         'sale_end',
         'product_type',

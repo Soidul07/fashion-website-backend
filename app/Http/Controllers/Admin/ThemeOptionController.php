@@ -59,6 +59,28 @@ class ThemeOptionController extends Controller
             $validated['footer_payment_logo'] = $this->handleFileUpload($request->file('footer_payment_logo'));
         }
 
+        // Handle Footer Image 1 file uploads
+        if ($request->hasFile('footer_image1')) {
+            if ($themeOptions->footer_image1) {
+                $fi1Path = public_path('admin_assets/uploads/') . $themeOptions->footer_image1;
+                if (file_exists($fi1Path)) {
+                    @unlink($fi1Path);
+                }
+            }
+            $validated['footer_image1'] = $this->handleFileUpload($request->file('footer_image1'));
+        }
+
+        // Handle Footer Image 2 file uploads
+        if ($request->hasFile('footer_image2')) {
+            if ($themeOptions->footer_image2) {
+                $fi2Path = public_path('admin_assets/uploads/') . $themeOptions->footer_image2;
+                if (file_exists($fi2Path)) {
+                    @unlink($fi2Path);
+                }
+            }
+            $validated['footer_image2'] = $this->handleFileUpload($request->file('footer_image2'));
+        }
+
         /* ================= TOP HEADER 1 REPEATER ================= */
 
         $existingTopHeader1 = json_decode($themeOptions->top_header1_texts, true) ?? [];
@@ -262,6 +284,8 @@ class ThemeOptionController extends Controller
             'admin_email' => 'nullable|email',
             'admin_phone' => 'nullable|string|max:20',
             'footer_payment_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'footer_image1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'footer_image2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'above_footer_section' => 'nullable|array',
             'above_footer_section.*.fs_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'above_footer_section.*.fs_title' => 'nullable|string|max:255',

@@ -140,10 +140,24 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-4 form-group">
                                 <label for="stock" class="form-label">Stock</label>
                                 <input type="number" name="stock" class="form-control @error('stock') is-invalid @enderror" id="stock" value="{{ old('stock') }}" min="0">
                                 @error('stock')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="reviews_count" class="form-label">Reviews Count</label>
+                                <input type="number" name="reviews_count" class="form-control @error('reviews_count') is-invalid @enderror" id="reviews_count" value="{{ old('reviews_count', 0) }}" min="0">
+                                @error('reviews_count')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="reviews_average" class="form-label">Reviews Average</label>
+                                <input type="number" step="0.1" name="reviews_average" class="form-control @error('reviews_average') is-invalid @enderror" id="reviews_average" value="{{ old('reviews_average', 0) }}" min="0" max="5">
+                                @error('reviews_average')
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -158,7 +172,7 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-4 form-group">
                                 <label for="category_id" class="form-label">Category</label>
                                 <select name="category_id" class="custom-select @error('category_id') is-invalid @enderror" id="category_id">
                                     <option value="" selected>Select Category</option>
@@ -179,7 +193,7 @@
                                     <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-4 form-group">
                                 <label for="season_category_id" class="form-label">Season Category</label>
                                 <select name="season_category_id" class="custom-select @error('season_category_id') is-invalid @enderror" id="season_category_id">
                                     <option value="">Select Season Category...</option>

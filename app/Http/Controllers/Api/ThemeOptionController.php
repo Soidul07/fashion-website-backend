@@ -28,6 +28,16 @@ class ThemeOptionController extends Controller
             $themeOptions->footer_payment_logo = asset('admin_assets/uploads/' . $themeOptions->footer_payment_logo);
         }
 
+        // Add image path for 'footer_image1'
+        if($themeOptions->footer_image1) {
+            $themeOptions->footer_image1 = asset('admin_assets/uploads/' . $themeOptions->footer_image1);
+        }
+
+        // Add image path for 'footer_image2'
+        if($themeOptions->footer_image2) {
+            $themeOptions->footer_image2 = asset('admin_assets/uploads/' . $themeOptions->footer_image2);
+        }
+
         // Handle 'social_links' JSON field and update image paths
         if($themeOptions->social_links) {
             $socialLinks = json_decode($themeOptions->social_links, true);

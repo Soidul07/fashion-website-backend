@@ -182,6 +182,20 @@
                                 @enderror
                             </div>
                             <div class="col-md-3 form-group">
+                                <label for="reviews_count" class="form-label">Reviews Count</label>
+                                <input type="number" name="reviews_count" class="form-control @error('reviews_count') is-invalid @enderror" id="reviews_count" value="{{ old('reviews_count', $product->reviews_count ?? 0) }}" min="0">
+                                @error('reviews_count')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="reviews_average" class="form-label">Reviews Average</label>
+                                <input type="number" step="0.1" name="reviews_average" class="form-control @error('reviews_average') is-invalid @enderror" id="reviews_average" value="{{ old('reviews_average', $product->reviews_average ?? 0) }}" min="0" max="5">
+                                @error('reviews_average')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 form-group">
                                 <label for="product_type" class="form-label">Product Type</label>
                                 <select name="product_type" class="custom-select @error('product_type') is-invalid @enderror" id="product_type">
                                     <option value="" selected>Select Product Type</option>

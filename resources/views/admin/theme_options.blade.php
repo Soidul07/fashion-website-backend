@@ -340,6 +340,68 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <div>
+                                            @if($themeOptions->footer_image1 && file_exists(public_path('admin_assets/uploads/' . $themeOptions->footer_image1)))
+                                                <div id="image-preview-fi1" class="mb-4 profile_image_box" style="display: block;">
+                                                    <img id="preview-img-fi1" src="{{ asset('admin_assets/uploads/' . $themeOptions->footer_image1) }}" class="img-thumbnail" alt="Image Preview" />
+                                                </div>
+                                            @else
+                                                <div id="image-preview-fi1" class="mb-4 profile_image_box" style="display: none;">
+                                                    <img id="preview-img-fi1" src="" class="img-thumbnail" alt="Image Preview" />
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <label for="image">Footer Image 1</label>
+                                        <div>
+                                            <label for="upload_image_fi1" class="custom-file-upload form-control">
+                                                Upload Your Image 
+                                                <span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 448 512"><path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z"/></svg>
+                                                </span>
+                                            </label>
+                                            <input id="upload_image_fi1" name="footer_image1" type="file" accept="image/*" class="form-control @error('footer_image1') is-invalid @enderror" style="display: none">
+                                            @error('footer_image1')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <div>
+                                            @if($themeOptions->footer_image2 && file_exists(public_path('admin_assets/uploads/' . $themeOptions->footer_image2)))
+                                                <div id="image-preview-fi2" class="mb-4 profile_image_box" style="display: block;">
+                                                    <img id="preview-img-fi2" src="{{ asset('admin_assets/uploads/' . $themeOptions->footer_image2) }}" class="img-thumbnail" alt="Image Preview" />
+                                                </div>
+                                            @else
+                                                <div id="image-preview-fi2" class="mb-4 profile_image_box" style="display: none;">
+                                                    <img id="preview-img-fi2" src="" class="img-thumbnail" alt="Image Preview" />
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <label for="image">Footer Image 2</label>
+                                        <div>
+                                            <label for="upload_image_fi2" class="custom-file-upload form-control">
+                                                Upload Your Image 
+                                                <span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 448 512"><path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32l0-210.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 64c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-64z"/></svg>
+                                                </span>
+                                            </label>
+                                            <input id="upload_image_fi2" name="footer_image2" type="file" accept="image/*" class="form-control @error('footer_image2') is-invalid @enderror" style="display: none">
+                                            @error('footer_image2')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group-background">

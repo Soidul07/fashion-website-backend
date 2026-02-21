@@ -19,6 +19,8 @@ class ThemeOption extends Model
         'admin_email',
         'admin_phone',
         'footer_payment_logo',
+        'footer_image1',
+        'footer_image2',
         'above_footer_section',
     ];
 }
