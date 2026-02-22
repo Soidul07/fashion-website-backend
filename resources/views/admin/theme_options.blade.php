@@ -235,7 +235,7 @@
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="form-label">Social Link URL</label>
-                                                        <input type="url" name="social_links[{{ $index }}][social_link_url]" class="form-control" value="{{ $link['social_link_url'] ?? '' }}">
+                                                        <input type="text" name="social_links[{{ $index }}][social_link_url]" class="form-control" value="{{ $link['social_link_url'] ?? '' }}">
                                                     </div>
                                                     <div class="theme_delete_btn">
                                                         <button data-repeater-delete type="button" class="btn btn-danger ms-2">
@@ -411,18 +411,25 @@
                                 <div class="above_footer_repeater">
                                     <div data-repeater-list="above_footer_section">
                                         @php
-                                            $above_footer_section = json_decode($themeOptions->above_footer_section, true) ?? [];
+                                            $above_footer_section = $themeOptions->above_footer_section;
+                                            if (is_string($above_footer_section)) {
+                                                $above_footer_section = json_decode($above_footer_section, true) ?? [];
+                                            } elseif (is_array($above_footer_section)) {
+                                                $above_footer_section = $above_footer_section;
+                                            } else {
+                                                $above_footer_section = [];
+                                            }
                                         @endphp
 
                                         @forelse($above_footer_section as $index => $section)
                                             <div data-repeater-item class="margin-top" data-index="{{ $index }}">
-                                                <div class="row mb-3 align-items-end">
+                                                <div class="row align-items-end">
                                                     <div class="col-12">
                                                         <div id="afs-preview-{{ $index }}" class="mb-4 profile_image_box" style="{{ isset($section['fs_image']) ? 'display: block;' : 'display: none;' }}">
                                                             <img id="preview-afs-{{ $index }}" src="{{ isset($section['fs_image']) ? asset('admin_assets/uploads/' . $section['fs_image']) : '' }}" class="img-thumbnail" alt="Image Preview" />
                                                         </div>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-3">
                                                         <label class="form-label block">Image</label>
                                                         <label for="afs_image_{{ $index }}" class="custom-file-upload form-control mb-0">
                                                             Upload Your Image
@@ -434,24 +441,16 @@
                                                         </label>
                                                         <input id="afs_image_{{ $index }}" name="above_footer_section[{{ $index }}][fs_image]" type="file" accept="image/*" class="form-control" style="display: none" onchange="previewImage_afs(event, {{ $index }})">
                                                     </div>
-                                                    <!-- Title Input -->
-                                                    <div class="col-6">
-                                                        <div class="input-group">
-                                                            <label for="fs_title_{{ $index }}" class="form-label">Title</label>
-                                                            <input type="text" name="above_footer_section[{{ $index }}][fs_title]" class="form-control" value="{{ $section['fs_title'] ?? '' }}">
-                                                        </div>
+                                                    <div class="col-3">
+                                                        <label class="form-label">Title</label>
+                                                        <input type="text" name="above_footer_section[{{ $index }}][fs_title]" class="form-control" value="{{ $section['fs_title'] ?? '' }}">
                                                     </div>
-                                                    <!-- Description Input -->
-                                                    <div class="col-12">
-                                                        <div class="input-group mt-3">
-                                                            <label for="fs_description_{{ $index }}" class="form-label">Description</label>
-                                                            <textarea name="above_footer_section[{{ $index }}][fs_description]" class="form-control">{{ $section['fs_description'] ?? '' }}</textarea>
-                                                        </div>
+                                                    <div class="col-3">
+                                                        <label class="form-label">Description</label>
+                                                        <input type="text" name="above_footer_section[{{ $index }}][fs_description]" class="form-control" value="{{ $section['fs_description'] ?? '' }}">
                                                     </div>
-                                                    <!-- Delete Button -->
-                                                    <div class="theme_delete_btn">
+                                                    <div class="col-3 theme_delete_btn">
                                                         <button data-repeater-delete type="button" class="btn btn-danger ms-2">
-                                                            <!-- Delete Icon -->
                                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14">
                                                                 <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"></path>
                                                             </svg>
@@ -461,13 +460,13 @@
                                             </div>
                                         @empty
                                             <div data-repeater-item class="margin-top">
-                                                <div class="row mb-3 align-items-end">
+                                                <div class="row align-items-end">
                                                     <div class="col-12">
                                                         <div id="afs-preview-0" class="mb-4 profile_image_box" style="display: none;">
                                                             <img id="preview-afs-0" src="" class="img-thumbnail" alt="Image Preview" />
                                                         </div>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-3">
                                                         <label class="form-label block">Image</label>
                                                         <label for="afs_image_0" class="custom-file-upload form-control mb-0">
                                                             Upload Your Image
@@ -479,24 +478,16 @@
                                                         </label>
                                                         <input id="afs_image_0" name="above_footer_section[0][fs_image]" type="file" accept="image/*" class="form-control" style="display: none" onchange="previewImage_afs(event, 0)">
                                                     </div>
-                                                    <!-- Title Input -->
-                                                    <div class="col-6">
-                                                        <div class="input-group">
-                                                            <label for="fs_title_0" class="form-label">Title</label>
-                                                            <input type="text" name="above_footer_section[0][fs_title]" class="form-control" value="">
-                                                        </div>
+                                                    <div class="col-3">
+                                                        <label class="form-label">Title</label>
+                                                        <input type="text" name="above_footer_section[0][fs_title]" class="form-control" value="">
                                                     </div>
-                                                    <!-- Description Input -->
-                                                    <div class="col-12">
-                                                        <div class="input-group mt-3">
-                                                            <label for="fs_description_0" class="form-label">Description</label>
-                                                            <textarea name="above_footer_section[0][fs_description]" class="form-control"></textarea>
-                                                        </div>
+                                                    <div class="col-3">
+                                                        <label class="form-label">Description</label>
+                                                        <input type="text" name="above_footer_section[0][fs_description]" class="form-control" value="">
                                                     </div>
-                                                    <!-- Delete Button -->
-                                                    <div class="theme_delete_btn">
+                                                    <div class="col-3 theme_delete_btn">
                                                         <button data-repeater-delete type="button" class="btn btn-danger ms-2">
-                                                            <!-- Delete Icon -->
                                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14">
                                                                 <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"></path>
                                                             </svg>
@@ -514,6 +505,115 @@
                                 </div>
                             </div>
                             <!-- Above Footer Section Repeater end -->
+                        </div>
+
+                        <div class="form-group-background">
+                            <label for="" class="form-label from-label-links">Modal Content Section</label>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="modal_title">Modal Title</label>
+                                        <input type="text" class="form-control" id="modal_title" name="modal_title" value="{{ old('modal_title', $themeOptions->modal_title) }}">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="modal_subtitle">Modal Subtitle</label>
+                                        <input type="text" class="form-control" id="modal_subtitle" name="modal_subtitle" value="{{ old('modal_subtitle', $themeOptions->modal_subtitle) }}">
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label class="form-label from-label-links">Modal Features (Maximum 3)</label>
+                                <div class="modal_features_repeater">
+                                    <div data-repeater-list="modal_features">
+                                        @php
+                                            $modalFeatures = $themeOptions->modal_features;
+                                            if (is_string($modalFeatures)) {
+                                                $modalFeatures = json_decode($modalFeatures, true) ?? [];
+                                            } elseif (is_array($modalFeatures)) {
+                                                $modalFeatures = $modalFeatures;
+                                            } else {
+                                                $modalFeatures = [];
+                                            }
+                                        @endphp
+                                        @forelse($modalFeatures as $index => $feature)
+                                            <div data-repeater-item class="margin-top">
+                                                <div class="row align-items-end">
+                                                    <div class="col-12">
+                                                        <div id="mf-preview-{{ $index }}" class="mb-4 profile_image_box" style="{{ isset($feature['icon']) ? 'display: block;' : 'display: none;' }}">
+                                                            <img id="preview-mf-{{ $index }}" src="{{ isset($feature['icon']) ? asset('admin_assets/uploads/' . $feature['icon']) : '' }}" class="img-thumbnail" alt="Image Preview" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label">Icon</label>
+                                                        <label for="mf_icon_{{ $index }}" class="custom-file-upload form-control mb-0">
+                                                            Upload Icon
+                                                            <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 448 512"><path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32V109.3l73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 53 43 96 96 96h256c53 0 96-43 96-96v-64c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-64z"/></svg></span>
+                                                        </label>
+                                                        <input id="mf_icon_{{ $index }}" name="icon" type="file" accept="image/*" class="form-control" style="display: none" onchange="previewImage_mf(event, {{ $index }})">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label">Title</label>
+                                                        <input type="text" name="title" class="form-control" value="{{ $feature['title'] ?? '' }}">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label">Description</label>
+                                                        <input type="text" name="description" class="form-control" value="{{ $feature['description'] ?? '' }}">
+                                                    </div>
+                                                    <div class="theme_delete_btn">
+                                                        <button data-repeater-delete type="button" class="btn btn-danger ms-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"/></svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div data-repeater-item class="margin-top">
+                                                <div class="row align-items-end">
+                                                    <div class="col-12">
+                                                        <div id="mf-preview-0" class="mb-4 profile_image_box" style="display: none;">
+                                                            <img id="preview-mf-0" src="" class="img-thumbnail" alt="Image Preview" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label">Icon</label>
+                                                        <label for="mf_icon_0" class="custom-file-upload form-control mb-0">
+                                                            Upload Icon
+                                                            <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 448 512"><path d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 192 320c0 17.7 14.3 32 32 32s32-14.3 32-32V109.3l73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 53 43 96 96 96h256c53 0 96-43 96-96v-64c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-64z"/></svg></span>
+                                                        </label>
+                                                        <input id="mf_icon_0" name="icon" type="file" accept="image/*" class="form-control" style="display: none" onchange="previewImage_mf(event, 0)">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label">Title</label>
+                                                        <input type="text" name="title" class="form-control">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label class="form-label">Description</label>
+                                                        <input type="text" name="description" class="form-control">
+                                                    </div>
+                                                    <div class="theme_delete_btn">
+                                                        <button data-repeater-delete type="button" class="btn btn-danger ms-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"/></svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                    <button data-repeater-create type="button" class="submit_btn">
+                                        <i class="fas fa-plus-circle"></i> Add More
+                                    </button>
+                                </div>
+                            </div>
+                             <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="modal_below_text">Modal Box Below Text</label>
+                                        <textarea class="form-control" id="modal_below_text" name="modal_below_text">{{ old('modal_below_text', $themeOptions->modal_below_text) }}</textarea>
+                                    </div>
+                                </div>
                         </div>
 
                         <div class="form-group-background update_btn">
@@ -597,7 +697,7 @@ function updateRepeaterIndexes_th1() {
         });
         $('.above_footer_repeater').repeater({
             initEmpty: false,
-            show: function () { alert(3546);
+            show: function () {
                 $(this).slideDown();
                 // Hide the image preview and clear the src attribute for a new row
                 $(this).find('.profile_image_box').hide();
@@ -613,6 +713,39 @@ function updateRepeaterIndexes_th1() {
                 }
             }
         });
+
+        $('.modal_features_repeater').repeater({
+            initEmpty: false,
+            show: function () {
+                if ($('.modal_features_repeater [data-repeater-item]').length <= 3) {
+                    $(this).slideDown();
+                    $(this).find('.profile_image_box').hide();
+                    $(this).find('img').attr('src', '');
+                    updateRepeaterIndexes_mf();
+                } else {
+                    alert('Maximum 3 features allowed');
+                    return false;
+                }
+            },
+            hide: function (deleteElement) {
+                if (confirm('Are you sure you want to delete this item?')) {
+                    $(this).slideUp(deleteElement, function () {
+                        $(this).remove();
+                        updateRepeaterIndexes_mf();
+                    });
+                }
+            }
+        });
+
+        function updateRepeaterIndexes_mf() {
+            $('.modal_features_repeater').find('[data-repeater-item]').each(function (index) {
+                const existingSrc = $(this).find('img').attr('src');
+                $(this).find('label[for*="mf_icon_"]').attr('for', 'mf_icon_' + index);
+                $(this).find('input[type="file"]').attr('id', 'mf_icon_' + index).attr('onchange', 'previewImage_mf(event, ' + index + ')');
+                $(this).find('.profile_image_box').attr('id', 'mf-preview-' + index);
+                $(this).find('img').attr('id', 'preview-mf-' + index).attr('src', existingSrc);
+            });
+        }
 
         function updateRepeaterIndexes_sl() {
             $('.social_links_repeater').find('[data-repeater-item]').each(function (index) {
@@ -659,6 +792,17 @@ function updateRepeaterIndexes_th1() {
             reader.onload = function (e) {
                 $('#preview-afs-' + index).attr('src', e.target.result);
                 $('#afs-preview-' + index).show();
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    function previewImage_mf(event, index) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#preview-mf-' + index).attr('src', e.target.result);
+                $('#mf-preview-' + index).show();
             };
             reader.readAsDataURL(file);
         }

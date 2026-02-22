@@ -22,5 +22,14 @@ class ThemeOption extends Model
         'footer_image1',
         'footer_image2',
         'above_footer_section',
+        'modal_title',
+        'modal_subtitle',
+        'modal_below_text',
+        'modal_features',
+    ];
+
+    protected $casts = [
+        'modal_features' => 'array',
+        'above_footer_section' => 'array',
     ];
 }

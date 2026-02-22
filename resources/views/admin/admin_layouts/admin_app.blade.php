@@ -192,8 +192,24 @@
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('admin.manage-home-pages') }}" class="nav-link {{ request()->routeIs('admin.manage-home-pages') ? 'active' : '' }}">
-                                        <svg fill="#000000" width="22" height="22" viewBox="0 0 48 48" data-name="Layer 1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"><title/><path d="M40,47H8a2,2,0,0,1-2-2V3A2,2,0,0,1,8,1H40a2,2,0,0,1,2,2V45A2,2,0,0,1,40,47ZM10,43H38V5H10Z"/><path d="M15,19a2,2,0,0,1-1.41-3.41l4-4a2,2,0,0,1,2.31-.37l2.83,1.42,5-4.16A2,2,0,0,1,30.2,8.4l4,3a2,2,0,1,1-2.4,3.2l-2.73-2.05-4.79,4a2,2,0,0,1-2.17.25L19.4,15.43l-3,3A2,2,0,0,1,15,19Z"/><circle cx="15" cy="24" r="2"/><circle cx="15" cy="31" r="2"/><circle cx="15" cy="38" r="2"/><path d="M33,26H22a2,2,0,0,1,0-4H33a2,2,0,0,1,0,4Z"/><path d="M33,33H22a2,2,0,0,1,0-4H33a2,2,0,0,1,0,4Z"/><path d="M33,40H22a2,2,0,0,1,0-4H33a2,2,0,0,1,0,4Z"/></svg>
+                                        <svg fill="#000000" width="22" height="22" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M40,47H8a2,2,0,0,1-2-2V3A2,2,0,0,1,8,1H40a2,2,0,0,1,2,2V45A2,2,0,0,1,40,47ZM10,43H38V5H10Z"/>
+                                            <circle cx="15" cy="24" r="2"/><circle cx="15" cy="31" r="2"/><circle cx="15" cy="38" r="2"/>
+                                            <path d="M33,26H22a2,2,0,0,1,0-4H33a2,2,0,0,1,0,4Z"/>
+                                            <path d="M33,33H22a2,2,0,0,1,0-4H33a2,2,0,0,1,0,4Z"/>
+                                            <path d="M33,40H22a2,2,0,0,1,0-4H33a2,2,0,0,1,0,4Z"/>
+                                        </svg>
                                         <p>Manage Home Pages</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7.5 11C9.433 11 11 9.433 11 7.5C11 5.567 9.433 4 7.5 4C5.567 4 4 5.567 4 7.5C4 9.433 5.567 11 7.5 11Z" fill=""/>
+                                            <path d="M13 7H20V9H13V7ZM13 11H20V13H13V11ZM13 15H20V17H13V15Z" fill=""/>
+                                            <path d="M7.5 13C4.462 13 2 15.462 2 18.5V20H13V18.5C13 15.462 10.538 13 7.5 13Z" fill=""/>
+                                        </svg>
+                                        <p>Testimonials</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">

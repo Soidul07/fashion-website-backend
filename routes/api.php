@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\UserAddressController;
 use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\TestimonialsController;
 
 // Public routes (no authentication required)
 Route::post('/register', [AuthController::class, 'register']);  
@@ -75,3 +76,6 @@ Route::post('/cashfree/webhook', [OrderController::class, 'cashfreeWebhook'])->n
 
 // Manage Leads routes
 Route::post('/leads', [LeadController::class, 'store'])->name('admin.leads.store');
+
+// Testimonials route
+Route::get('/testimonials', [TestimonialsController::class, 'index']);

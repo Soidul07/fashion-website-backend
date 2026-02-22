@@ -13,7 +13,7 @@ class LeadController extends Controller
     {
         // Custom validation to allow consistent response format
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:leads,email',
+            'email' => 'nullable|email|unique:leads,email',
             'phone' => 'required|string|unique:leads,phone',
         ]);
     

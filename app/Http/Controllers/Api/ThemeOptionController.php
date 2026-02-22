@@ -40,24 +40,37 @@ class ThemeOptionController extends Controller
 
         // Handle 'social_links' JSON field and update image paths
         if($themeOptions->social_links) {
-            $socialLinks = json_decode($themeOptions->social_links, true);
-            foreach ($socialLinks as &$link) {
-                if (!empty($link['social_icon'])) {
-                    $link['social_icon'] = asset('admin_assets/uploads/' . $link['social_icon']);
+            $socialLinks = is_string($themeOptions->social_links) ? json_decode($themeOptions->social_links, true) : $themeOptions->social_links;
+            if (is_array($socialLinks)) {
+                foreach ($socialLinks as &$link) {
+                    if (!empty($link['social_icon'])) {
+                        $link['social_icon'] = asset('admin_assets/uploads/' . $link['social_icon']);
+                    }
                 }
+                $themeOptions->social_links = json_encode($socialLinks);
             }
-            $themeOptions->social_links = json_encode($socialLinks);
         }
 
         // Handle 'above_footer_section' JSON field and update image paths
         if($themeOptions->above_footer_section) {
-            $footerSections = json_decode($themeOptions->above_footer_section, true);
+            $footerSections = is_array($themeOptions->above_footer_section) ? $themeOptions->above_footer_section : json_decode($themeOptions->above_footer_section, true);
             foreach ($footerSections as &$section) {
                 if (!empty($section['fs_image'])) {
                     $section['fs_image'] = asset('admin_assets/uploads/' . $section['fs_image']);
                 }
             }
             $themeOptions->above_footer_section = json_encode($footerSections);
+        }
+
+        // Handle 'modal_features' JSON field and update image paths
+        if($themeOptions->modal_features) {
+            $modalFeatures = is_array($themeOptions->modal_features) ? $themeOptions->modal_features : json_decode($themeOptions->modal_features, true);
+            foreach ($modalFeatures as &$feature) {
+                if (!empty($feature['icon'])) {
+                    $feature['icon'] = asset('admin_assets/uploads/' . $feature['icon']);
+                }
+            }
+            $themeOptions->modal_features = json_encode($modalFeatures);
         }
 
         // Return the data as a JSON response

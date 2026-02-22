@@ -174,7 +174,12 @@ class ThemeOptionController extends Controller
 
 
         // Handle above footer section
-        $existingAboveFooterSections = json_decode($themeOptions->above_footer_section, true) ?? [];
+        $existingAboveFooterSections = $themeOptions->above_footer_section;
+        if (is_string($existingAboveFooterSections)) {
+            $existingAboveFooterSections = json_decode($existingAboveFooterSections, true) ?? [];
+        } else {
+            $existingAboveFooterSections = $existingAboveFooterSections ?? [];
+        }
         $updatedAboveFooterSections = [];
         $deletedImages = []; // Array to hold images to be deleted
 
@@ -260,7 +265,64 @@ class ThemeOptionController extends Controller
         // Convert arrays to JSON for storage in a single column
         //dd($validated['social_links']);
         $validated['social_links'] = json_encode($validated['social_links'] ?? []);
-        $validated['above_footer_section'] = json_encode($validated['above_footer_section'] ?? []);
+        
+        // Handle modal features
+        $existingModalFeatures = is_array($themeOptions->modal_features) ? $themeOptions->modal_features : json_decode($themeOptions->modal_features, true) ?? [];
+        $updatedModalFeatures = [];
+        $deletedImages = [];
+
+        if ($request->has('modal_features')) {
+            $submittedModalFeatures = $validated['modal_features'];
+            $submittedIndices = array_keys($submittedModalFeatures);
+            $existingIndices = array_keys($existingModalFeatures);
+
+            foreach ($submittedModalFeatures as $index => $feature) {
+                if (array_key_exists($index, $existingModalFeatures)) {
+                    $existingIcon = $existingModalFeatures[$index]['icon'] ?? null;
+                    
+                    if (isset($feature['icon']) && is_file($feature['icon'])) {
+                        if ($existingIcon && file_exists(public_path('admin_assets/uploads/') . $existingIcon)) {
+                            $deletedImages[] = $existingIcon;
+                        }
+                        $iconPath = $this->handleFileUpload($feature['icon']);
+                    } else {
+                        $iconPath = $existingIcon;
+                    }
+                } else {
+                    $iconPath = isset($feature['icon']) && is_file($feature['icon']) ? $this->handleFileUpload($feature['icon']) : null;
+                }
+
+                $updatedModalFeatures[$index] = [
+                    'icon' => $iconPath,
+                    'title' => $feature['title'] ?? null,
+                    'description' => $feature['description'] ?? null,
+                ];
+            }
+
+            foreach ($existingIndices as $index) {
+                if (!array_key_exists($index, $submittedModalFeatures)) {
+                    if (isset($existingModalFeatures[$index]['icon']) && file_exists(public_path('admin_assets/uploads/') . $existingModalFeatures[$index]['icon'])) {
+                        $deletedImages[] = $existingModalFeatures[$index]['icon'];
+                    }
+                }
+            }
+
+            foreach ($deletedImages as $deletedImage) {
+                $deletedImagePath = public_path('admin_assets/uploads/') . $deletedImage;
+                if (file_exists($deletedImagePath)) {
+                    @unlink($deletedImagePath);
+                }
+            }
+
+            $validated['modal_features'] = array_values($updatedModalFeatures);
+        } else {
+            foreach ($existingModalFeatures as $feature) {
+                if (isset($feature['icon']) && file_exists(public_path('admin_assets/uploads/') . $feature['icon'])) {
+                    @unlink(public_path('admin_assets/uploads/') . $feature['icon']);
+                }
+            }
+            $validated['modal_features'] = [];
+        }
 
         // Update the ThemeOption instance with validated data
         $themeOptions->update($validated);
@@ -290,6 +352,13 @@ class ThemeOptionController extends Controller
             'above_footer_section.*.fs_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'above_footer_section.*.fs_title' => 'nullable|string|max:255',
             'above_footer_section.*.fs_description' => 'nullable|string',
+            'modal_title' => 'nullable|string|max:255',
+            'modal_subtitle' => 'nullable|string|max:255',
+            'modal_below_text' => 'nullable|string',
+            'modal_features' => 'nullable|array|max:3',
+            'modal_features.*.icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'modal_features.*.title' => 'nullable|string',
+            'modal_features.*.description' => 'nullable|string',
         ]);
     }
 
