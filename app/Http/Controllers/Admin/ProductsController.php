@@ -49,9 +49,9 @@ class ProductsController extends Controller
         $validated['additional_information'] = $this->formatJsonField($request->additional_information);
         $validated['qa'] = $this->formatJsonField($request->qa);
         
-        // Handle size field for blouse products and matching blouse for saree
+        // Handle size field for blouse/kurtas_kurtis products and matching blouse for saree
         $validated['product_type'] = $request->product_type;
-        if ($request->product_type === 'blouse' && $request->has('size')) {
+        if (in_array($request->product_type, ['blouse', 'kurtas_kurtis']) && $request->has('size')) {
             $validated['size'] = $request->size;
             $validated['matching_blouse'] = null;
         } elseif ($request->product_type === 'saree' && $request->has('matching_blouse')) {
@@ -125,7 +125,7 @@ class ProductsController extends Controller
         
         // Handle product type, size and matching blouse
         $product->product_type = $request->product_type;
-        if ($request->product_type === 'blouse' && $request->has('size')) {
+        if (in_array($request->product_type, ['blouse', 'kurtas_kurtis']) && $request->has('size')) {
             $product->size = $request->size;
             $product->matching_blouse = null;
         } elseif ($request->product_type === 'saree' && $request->has('matching_blouse')) {
@@ -229,7 +229,7 @@ class ProductsController extends Controller
         $rules = [
             'title' => 'required|string|max:255',
             'sku' => ['required', 'string', 'max:255', $uniqueSkuRule],
-            'product_type' => 'nullable|in:saree,blouse',
+            'product_type' => 'nullable|in:saree,blouse,kurtas_kurtis',
             'size' => 'nullable|array',
             'size.*' => 'in:XS,S,M,L,XL,XXL',
             'matching_blouse' => 'nullable|array',

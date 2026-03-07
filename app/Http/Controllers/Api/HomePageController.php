@@ -18,24 +18,24 @@ class HomePageController extends Controller
          ========================= */
         $homeData = ManageHomePage::first();
 
-        if ($homeData && $homeData->home_video) {
-            // PUBLIC folder video path
-            $homeData->home_video_url = url('admin_assets/uploads/home-videos/' . $homeData->home_video);
-        } else {
-            $homeData->home_video_url = null;
+        if ($homeData) {
+            if ($homeData->home_video) {
+                $homeData->home_video_url = url('admin_assets/uploads/home-videos/' . $homeData->home_video);
+            } else {
+                $homeData->home_video_url = null;
+            }
         }
 
         /* =========================
-         |  SAREES CATEGORIES
+         |  ALL SUBCATEGORIES
          ========================= */
-        $mainCategory = Category::whereNull('parent_id')->first();
-
-        $subCategories = $mainCategory
-            ? $mainCategory->children()
-                ->withCount('products')
-                ->take(4)
-                ->get()
-                ->map(function ($category) {
+        $subCategories = Category::whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->withCount('products');
+            }])
+            ->get()
+            ->flatMap(function ($mainCategory) {
+                return $mainCategory->children->map(function ($category) {
                     return [
                         'id' => $category->id,
                         'name' => $category->name,
@@ -45,8 +45,8 @@ class HomePageController extends Controller
                             : null,
                         'product_count' => $category->products_count,
                     ];
-                })
-            : [];
+                });
+            });
 
         /* =========================
          |  LATEST CATEGORY BANNERS

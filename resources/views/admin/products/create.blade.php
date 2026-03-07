@@ -167,6 +167,7 @@
                                     <option value="" selected>Select Product Type</option>
                                     <option value="saree" {{ old('product_type') == 'saree' ? 'selected' : '' }}>Saree</option>
                                     <option value="blouse" {{ old('product_type') == 'blouse' ? 'selected' : '' }}>Blouse</option>
+                                    <option value="kurtas_kurtis" {{ old('product_type') == 'kurtas_kurtis' ? 'selected' : '' }}>Kurtas & Kurtis</option>
                                 </select>
                                 @error('product_type')
                                     <span class="invalid-feedback">{{ $message }}</span>
@@ -465,7 +466,7 @@
     // Show/hide size field based on product type selection
     $('#product_type').on('change', function() {
         console.log('Product type changed to:', $(this).val());
-        if ($(this).val() === 'blouse') {
+        if ($(this).val() === 'blouse' || $(this).val() === 'kurtas_kurtis') {
             $('#size-field').show();
             $('#matching-blouse-field').hide();
             $('#matching_blouse').val([]);
