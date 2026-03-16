@@ -10,6 +10,43 @@ use Illuminate\Http\Request;
 class ProductsController extends Controller
 {
     /**
+     * Search products by query.
+     */
+    public function searchProducts(Request $request)
+    {
+        $query = $request->query('query');
+        
+        if (!$query) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Query parameter is required'
+            ], 400);
+        }
+
+        $products = Product::where('title', 'like', '%' . $query . '%')
+            ->select('id', 'title', 'slug', 'regular_price', 'sale_price', 'sale_start', 'sale_end', 'stock', 'product_image', 'product_image2')
+            ->get()
+            ->map(function ($product) {
+                if ($product->product_image) {
+                    $product->product_image = asset('admin_assets/uploads/' . $product->product_image);
+                }
+                if ($product->product_image2) {
+                    $product->product_image2 = asset('admin_assets/uploads/' . $product->product_image2);
+                }
+                $product->discount_percentage = $product->regular_price > 0 && $product->sale_price > 0
+                    ? round((($product->regular_price - $product->sale_price) / $product->regular_price) * 100)
+                    : 0;
+                return $product;
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Products retrieved successfully',
+            'products' => $products
+        ], 200);
+    }
+
+    /**
      * Get products by category slug and return category details along with products.
      * Only limited product data will be returned.
      */

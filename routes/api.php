@@ -57,6 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/parent-categories-with-subcategories', [CategoriesController::class, 'getParentCategoriesWithSubcategories']);
 
 // Products route
+Route::get('/search-products', [ProductsController::class, 'searchProducts']);
 Route::get('/get-products-by-category/{slug}', [ProductsController::class, 'getProductsByCategory']);
 Route::get('/get-products-by-season-category/{slug}', [ProductsController::class, 'getProductsBySeasonCategory']);
 Route::get('/get-products-details-by-slug/{slug}', [ProductsController::class, 'getProductDetailsBySlug']);
