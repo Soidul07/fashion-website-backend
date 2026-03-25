@@ -76,7 +76,13 @@ class OrderController extends Controller
 
         // Compare calculated total with the total from the request
         if (abs($calculatedTotal - $request->total) > 0.01) { // Allowing a small difference due to floating point precision
-            return response()->json(['status' => 'error', 'message' => 'Total price mismatch.'], 400);
+            return response()->json([
+                'status' => 'error', 
+                'message' => 'Total price mismatch.',
+                'calculated_total' => $calculatedTotal,
+                'sent_total' => $request->total,
+                'difference' => abs($calculatedTotal - $request->total)
+            ], 400);
         }
 
         // Map payu to cashfree for backward compatibility
@@ -187,10 +193,17 @@ class OrderController extends Controller
 
     private function getProductPrice($product, $currentDate)
     {
-        if ($product->sale_price && $product->sale_start && $product->sale_end && 
-            $currentDate->between($product->sale_start, $product->sale_end)) {
+        // If sale price exists and sale dates are set, check if current date is within sale period
+        if ($product->sale_price && $product->sale_start && $product->sale_end) {
+            if ($currentDate->between($product->sale_start, $product->sale_end)) {
+                return $product->sale_price;
+            }
+        }
+        // If sale price exists but no dates are set, use sale price
+        elseif ($product->sale_price) {
             return $product->sale_price;
         }
+        
         return $product->regular_price;
     }
 
