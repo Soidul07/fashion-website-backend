@@ -13,4 +13,11 @@ class LeadController extends Controller
         $leads = Lead::all();
         return view('admin.leads.index', compact('leads'));
     }
+
+    public function destroy($id)
+    {
+        $lead = Lead::findOrFail($id);
+        $lead->delete();
+        return redirect()->route('admin.leads.index')->with('success', 'Lead deleted successfully');
+    }
 }

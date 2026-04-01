@@ -93,6 +93,7 @@ Route::middleware([CheckAdmin::class])->group(function () {
 
     // Manage Leads routes
     Route::get('/leads', [LeadController::class, 'index'])->name('admin.leads.index');
+    Route::delete('/leads/{id}', [LeadController::class, 'destroy'])->name('admin.leads.destroy');
 
     // Testimonials management routes
     Route::get('/testimonials', [\App\Http\Controllers\Admin\TestimonialsController::class, 'index'])->name('admin.testimonials.index');
